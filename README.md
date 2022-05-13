@@ -84,23 +84,23 @@ To run this project to live, You need three command window to execute this proje
 ```
 uwsgi --socket 0.0.0.0:5000 --protocol=http -w run:app
 ```
-NB: The above uses uwsgi to run the flast app, but if it does try the development command
+NB: The above uses uwsgi to run the flask app, but if it does try the development command
 ```
 python3 run.py
 ```
 
-#### Start Radis
+#### Start Celery Worker
 ```
 celery -A core.task.celery worker --loglevel=INFO
 
 ```
-#### Start Radis
+#### Start Celery Beat
 ```
 celery -A core.task.celery worker --loglevel=INFO
 ```
 
 
-## 🚀 Deploying your own bot <a name = "deployment"></a>
+## 🚀 Deploying API <a name = "deployment"></a>
 
 This project is currently using sqlite, however changing the dev_flag (in core/__init__.py) to deployment will require some configutation should be consider.
 
