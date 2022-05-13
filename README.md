@@ -52,6 +52,20 @@ Clone the repo on your machine
 git clone https://github.com/iMiebaka/lendigo_task.git
 cd lendigo_task
 ```
+#### Initilize/ Migrate Database
+
+To Initate Database, run the command below:
+```
+python3 create_db.py
+```
+You might experience some errors if the database (SQLite) already exit.
+
+</br>
+To migrate database run the command below
+
+```
+python3 migration.py
+```
 
 ### Installing
 
