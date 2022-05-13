@@ -15,7 +15,6 @@
 
 - [About](#about)
 - [How it works](#working)
-- [Usage](#usage)
 - [Getting Started](#getting_started)
 - [Deploying API](#deployment)
 - [Built Using](#built_using)
