@@ -14,20 +14,18 @@
 ## 📝 Table of Contents
 
 - [About](#about)
-- [Demo / Working](#demo)
 - [How it works](#working)
 - [Usage](#usage)
 - [Getting Started](#getting_started)
-- [Deploying your own bot](#deployment)
+- [Deploying API](#deployment)
 - [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
+- [API URL](#api-side)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
 
-An API built to get news from HackerNews api
+An API built to get news from HackerNews api. It also lets you post to the API too.
 
 ## 💭 How it works <a name = "working"></a>
 
@@ -64,7 +62,7 @@ Now the code is pulled, lets install the packages in the requirements.txt
 pip install -r requirements.txt
 ```
 
-### Executing The project
+#### Executing The project
 
 To run this project to live, You need three command window to execute this project
 
@@ -97,7 +95,7 @@ celery -A core.task.celery worker --loglevel=INFO
 celery -A core.task.celery worker --loglevel=INFO
 ```
 
-## API Urls
+## 💭 API Urls <a name = "api-side"></a>
 
 <p> API_ENDPOINT:   The API_ENDPOINT is as followed:
 <br>
@@ -108,25 +106,32 @@ celery -A core.task.celery worker --loglevel=INFO
 http://localhost:5000/api/v1
 ```
 
+### Get Post
 ```
 http://localhost:5000/api/v1/get-post
 
 ```
+
+Using Search Query
 ```
-http://localhost:5000/api/v1/get-post?page=1$search=helloworld
+http://localhost:5000/api/v1/get-post?page=1?search=helloworld
 
 ```
 
+Using Pagination Query
 
-<br>
+```
+http://localhost:5000/api/v1/get-post?page=1?search=helloworld&page=1
+```
 
-#### To Add Post
+
+### To Add Post
 
 ```
 http://localhost:5000/api/v1/add-post
 ```
-Body Example
 
+Body Example
 
 ```
 {
@@ -137,6 +142,14 @@ Body Example
   "text": "test_data"
   }
 ```
+
+### Delete Post
+```
+http://localhost:5000/api/v1/get-post?page=1?delete=11111
+
+```
+NB: You can only delete custom made post
+
 
 ## 🚀 Deploying API <a name = "deployment"></a>
 
@@ -151,9 +164,10 @@ If you want to switch to production, do not forget to create the mysql data
 
 Also to note, if your using Redis a a service, it has to reflect in the config..
 
+
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [PRAW](https://praw.readthedocs.io/en/latest/) - Python - Flask
+- [Flask Web Server](https://flask-login.readthedocs.io/en/latest/) - Python
 
 ## ✍️ Authors <a name = "authors"></a>
 
