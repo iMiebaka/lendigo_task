@@ -31,10 +31,10 @@ An API built to get news from HackerNews api
 
 ## 💭 How it works <a name = "working"></a>
 
-This project sweeps the Hacker News API every 5 minutes for the latest news and store them in a database
+This project sweeps the Hacker News API every 5 minutes and get 100 for the latest news and store them in a database. However, on a blank database it pulls all of it.
 <p> API_ENDPOINT:   
 <br>
-'/api/v1/get-comments', '/api/v1/add-comment', '/api/v1/delete-post', '/api/v1/get-posts', '/api/v1/add-post', '/api/v1/', '/']
+['/api/v1/get-comments', '/api/v1/add-comment', '/api/v1/delete-post', '/api/v1/get-posts', '/api/v1/add-post', '/api/v1/', '/']
 </p>
 
 The API_ENDPOINT is as followed:
@@ -47,7 +47,7 @@ http://localhost:5000/api/v1
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
 ### Prerequisites
-You need Python and Redis installed on your machine to get this program running. Let's create create a virtual enviroment.
+You need Python and Redis installed on your machine to get this program running. We'll start by creating a virtual enviroment.
 
 ```
 python3 -m venv venv
@@ -60,8 +60,8 @@ Activate the virtual enviroment
 
 Clone the repo on your machine
 ```
-git clone xxx
-cd xxx
+git clone https://github.com/iMiebaka/lendigo_task.git
+cd lendigo_task
 ```
 
 ### Installing
@@ -75,7 +75,7 @@ pip install -r requirements.txt
 
 ### Executing The project
 
-Now lets bring this project to live, You need three command window to execute this project
+To run this project to live, You need three command window to execute this project
 - One for the flask app
 - Another to start Celery
 - Last window for Run the API call every 5 minutes
@@ -102,18 +102,20 @@ celery -A core.task.celery worker --loglevel=INFO
 
 ## 🚀 Deploying your own bot <a name = "deployment"></a>
 
-This project is currently using sqlite, however changing the dev_flag (in core/__init__.py) to deployment, some configutation should be consider.
+This project is currently using sqlite, however changing the dev_flag (in core/__init__.py) to deployment will require some configutation should be consider.
 
 
 If you want to switch to production, do not forget to create the mysql data
   - username: root
   - password: MYSQL_ROOT_PASSWORD  # Change as configured by MySQL Database
   - database_name: hackernewstask
+<br>
+  
+Also to note, if your using Redis a a service, it has to reflect in the config..
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
 - [PRAW](https://praw.readthedocs.io/en/latest/) - Python - Flask
-- [Heroku](https://www.heroku.com/) - SaaS hosting platform
 
 ## ✍️ Authors <a name = "authors"></a>
 
