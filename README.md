@@ -105,7 +105,7 @@ celery -A core.task.celery worker --loglevel=INFO
 http://localhost:5000/api/v1
 ```
 
-### Get Post
+### Get Post - GET
 ```
 http://localhost:5000/api/v1/get-post
 
@@ -124,7 +124,7 @@ http://localhost:5000/api/v1/get-post?page=1?search=helloworld&page=1
 ```
 
 
-### To Add Post
+### To Add Post - POST
 
 ```
 http://localhost:5000/api/v1/add-post
@@ -142,7 +142,7 @@ Body Example
   }
 ```
 
-### Delete Post
+### Delete Post - DELETE
 ```
 http://localhost:5000/api/v1/get-post?page=1?delete=11111
 

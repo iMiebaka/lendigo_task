@@ -167,19 +167,21 @@ def add_comment():
 # Add Post
 @api.route('delete-post', methods=['DELETE'])
 def delete_post():
-    id = request.args.get('id', None, type=int)
-    post_init =  models.PostId.query.filter_by(public_id=id).first()
-    if post_init is None:
-        return jsonify({"status": "success", "message": "Id does not exist"})
+    try:
+        id = request.args.get('id', None, type=int)
+        post_init =  models.PostId.query.filter_by(public_id=id).first()
+        if post_init is None:
+            return jsonify({"status": "success", "message": "Id does not exist"})
 
-    if post_init.custom is False:
-        return jsonify({"status": "success", "message": "Cannot Pulled API code"})
-    
-    post = models.Post.query.filter_by(public_id=id).first()
-    comments = models.Comments.query.filter_by(parent_id=post_init.id).all()
-    for comment in comments:
-        db.session.delete(comment)
-    db.session.delete(post)
-    db.session.delete(post_init)
+        if post_init.custom is False:
+            return jsonify({"status": "success", "message": "Cannot Pulled API code"})
         
+        post = models.Post.query.filter_by(public_id=id).first()
+        comments = models.Comments.query.filter_by(parent_id=post_init.id).all()
+        for comment in comments:
+            db.session.delete(comment)
+        db.session.delete(post)
+        db.session.delete(post_init)
+    except:
+        return jsonify({"status": "success", "message": "Something went wrong with your request"}), 400
     return jsonify({"status": "success", "message": "Post Deleted"})
