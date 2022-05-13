@@ -20,7 +20,6 @@ def home():
 # Add Post
 @api.route('add-post', methods=['POST'])
 def add_post():
-    print(request.json)
     try:
         by = request.json.get('by')
         descendants = request.json.get('descendants')
@@ -32,7 +31,8 @@ def add_post():
             if models.PostId.query.filter_by(public_id=id).first() is None:
                 break
         p_id = models.PostId(
-            public_id=id
+            public_id=id,
+            custom = True
         )
         db.session.add(p_id)
         db.session.commit()
@@ -51,6 +51,7 @@ def add_post():
             text = text,
             url = url,
             type = get_type.id,
+            custom = True
         )
         db.session.add(post)
         db.session.commit()
@@ -164,7 +165,21 @@ def add_comment():
 
 
 # Add Post
-@api.route('delete-post', methods=['POST'])
+@api.route('delete-post', methods=['DELETE'])
 def delete_post():
     id = request.args.get('id', None, type=int)
-    return jsonify({"status": "success", "message": "Comment Entered"})
+    post_init =  models.PostId.query.filter_by(public_id=id).first()
+    if post_init is None:
+        return jsonify({"status": "success", "message": "Id does not exist"})
+
+    if post_init.custom is False:
+        return jsonify({"status": "success", "message": "Cannot Pulled API code"})
+    
+    post = models.Post.query.filter_by(public_id=id).first()
+    comments = models.Comments.query.filter_by(parent_id=post_init.id).all()
+    for comment in comments:
+        db.session.delete(comment)
+    db.session.delete(post)
+    db.session.delete(post_init)
+        
+    return jsonify({"status": "success", "message": "Post Deleted"})

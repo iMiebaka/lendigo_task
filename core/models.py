@@ -12,6 +12,7 @@ class Post(db.Model):
     descendants = db.Column(db.Integer)
     public_id = db.Column(db.Integer, db.ForeignKey('post_id.id'))
     # kids = db.Column(db.Integer, db.ForeignKey('kids.id'))
+    custom = db.Column(db.Boolean, default=False)
     score = db.Column(db.Integer)
     time = db.Column(db.Integer)
     title = db.Column(db.String(150))
@@ -57,6 +58,7 @@ class PostId(db.Model):
     __tablename__ = "post_id"
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.Integer)
+    custom = db.Column(db.Boolean, default=False)
     created_on = db.Column(db.DateTime, default=datetime.now())
 
 # class Kids(db.Model):
