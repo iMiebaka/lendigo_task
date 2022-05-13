@@ -62,103 +62,103 @@ def add_post():
 # Show Post
 @api.route('get-posts', methods=['GET'])
 def get_posts():
-    page = request.args.get('page', 1, type=int)
-    search = request.args.get('search', "", type=str)
-    per_page = 10
-    if search:
-        try:
-            post = models.Post.query.order_by(models.Post.id.desc())\
-                .paginate(page=page, per_page=per_page)
-        except:
-            return jsonify({"status": "error", "message": "Page not found"}), 400
-        
-    else:
-        try:
-            post = models.Post.query.filter(models.Post.text.ilike(f"%{search}%") | models.Post.title.ilike(f"%{search}%")) \
-                .order_by(models.Post.created_on.desc())\
-                .paginate(page=page, per_page=per_page)  
-        except:
-            return jsonify({"status": "error", "message": "Page not found"}), 400
+    try:
+        page = request.args.get('page', 1, type=int)
+        search = request.args.get('search', "", type=str)
+        per_page = 10
+        if search:
+            try:
+                post = models.Post.query.order_by(models.Post.id.desc())\
+                    .paginate(page=page, per_page=per_page)
+            except:
+                return jsonify({"status": "error", "message": "Page not found"}), 400
+            
+        else:
+            try:
+                post = models.Post.query.filter(models.Post.text.ilike(f"%{search}%") | models.Post.title.ilike(f"%{search}%")) \
+                    .order_by(models.Post.created_on.desc())\
+                    .paginate(page=page, per_page=per_page)  
+            except:
+                return jsonify({"status": "error", "message": "Page not found"}), 400
 
-    posts = []
-    for _ in post.items:
-        trans = _.sheetSummary
-        posts.append(trans)
+        posts = []
+        for _ in post.items:
+            trans = _.sheetSummary
+            posts.append(trans)
+    except:
+        return jsonify({"status": "error", "message": "Something went wrong with your request"}), 400
+
     return jsonify({"status": "success", "data": posts, "page":page, "length":round(post.total/per_page)}), 200
 
 # Show Post
 @api.route('get-comments', methods=['GET'])
 def get_comments():
-    page = request.args.get('page', 1, type=int)
-    per_page = 20
-    try:
-        post = models.Comment.query.order_by(models.Comment.id.asc())\
-            .paginate(page=page, per_page=per_page)
-    except:
-        return jsonify({"status": "error", "message": "Comment not found"}), 404
+    try: 
+        page = request.args.get('page', 1, type=int)
+        per_page = 20
+        try:
+            post = models.Comment.query.order_by(models.Comment.id.asc())\
+                .paginate(page=page, per_page=per_page)
+        except:
+            return jsonify({"status": "error", "message": "Comment not found"}), 404
 
-    posts = []
-    for _ in post.items:
-        trans = _.sheetSummary
-        posts.append(trans)
+        posts = []
+        for _ in post.items:
+            trans = _.sheetSummary
+            posts.append(trans)
+    except:
+        return jsonify({"status": "error", "message": "Something went wrong with your request"}), 400
+
     return jsonify({"status": "success", "data": posts, "page":page, "length":round(post.total/per_page)})
 
 
 # Add Comment
 @api.route('add-comment', methods=['POST'])
 def add_comment():
-    by = request.json.get('by')
-    title = request.json.get('title')
-    text = request.json.get('text')
-    parent_id_ = request.json.get('parent_id')
-    
-    comment_reply = False
-    parent_id = models.PostId.query.filter_by(
-        public_id=parent_id_
-    ).first()
-    if parent_id is not None:
-        post_id = parent_id.id
+    try:
+        by = request.json.get('by')
+        title = request.json.get('title')
+        text = request.json.get('text')
+        parent_id_ = request.json.get('parent_id')
+        
         comment_reply = False
-    else:
-        print(parent_id)
-        parent_id = models.Comments.query.filter_by(
+        parent_id = models.PostId.query.filter_by(
             public_id=parent_id_
         ).first()
-        print(parent_id)
         if parent_id is not None:
-            parent_id.replied = True
             post_id = parent_id.id
-            comment_reply = True
+            comment_reply = False
         else:
-            return jsonify({"status": "error", "message": "Post does not exist"}), 404
+            print(parent_id)
+            parent_id = models.Comments.query.filter_by(
+                public_id=parent_id_
+            ).first()
+            print(parent_id)
+            if parent_id is not None:
+                parent_id.replied = True
+                post_id = parent_id.id
+                comment_reply = True
+            else:
+                return jsonify({"status": "error", "message": "Post does not exist"}), 404
 
-    while True:
-        id = randint(10000001, 30000000)
-        if models.PostId.query.filter_by(public_id=id).first() is None:
-            print(id)
-            break
-    post = models.Comments(
-        by = by,
-        parent_id = post_id,
-        public_id = id,
-        time = time(),
-        title = title,
-        text = text,
-        kid = comment_reply
-    )
-    db.session.add(post)
-    db.session.commit()
-    
-    # find_type = models.Type.query.filter_by(name="comment").first()
-    # if find_type is None:
-    #     type_ = models.Type(
-    #         name = "comment",
-    #     )
-    #     db.session.add(type_)
-    #     post.type = type_.id
-    # else:
-    #     post.type = find_type.id
-    # db.session.commit()
+        while True:
+            id = randint(10000001, 30000000)
+            if models.PostId.query.filter_by(public_id=id).first() is None:
+                print(id)
+                break
+        post = models.Comments(
+            by = by,
+            parent_id = post_id,
+            public_id = id,
+            time = time(),
+            title = title,
+            text = text,
+            kid = comment_reply
+        )
+        db.session.add(post)
+        db.session.commit()
+    except:
+        return jsonify({"status": "error", "message": "Something went wrong with your request"}), 400
 
     return jsonify({"status": "success", "message": "Comment Entered"})
 
@@ -183,5 +183,5 @@ def delete_post():
         db.session.delete(post)
         db.session.delete(post_init)
     except:
-        return jsonify({"status": "success", "message": "Something went wrong with your request"}), 400
+        return jsonify({"status": "error", "message": "Something went wrong with your request"}), 400
     return jsonify({"status": "success", "message": "Post Deleted"})
